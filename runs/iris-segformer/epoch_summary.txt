@@ -1,0 +1,2 @@
+03/04/2026 15:41:08 Epoch 1/2 summary: loss_train=0.38050, acc_train=77.39%, loss_val=0.23742, acc_val=88.89%, miou_train=65.59%, miou_val=80.38% (best: 88.89% @ epoch 1)
+03/04/2026 15:45:55 Epoch 2/2 summary: loss_train=0.17425, acc_train=90.73%, loss_val=0.08031, acc_val=93.87%, miou_train=83.52%, miou_val=88.80% (best: 93.87% @ epoch 2)

@@ -47,7 +47,7 @@ Thumbs.db
 logs/
 
 # ML artifacts
-runs/
+runs/iris-segformer/checkpoints/best.pt
 checkpoints/
 wandb/
 mlruns/

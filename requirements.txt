@@ -10,3 +10,6 @@ scikit-learn>=1.4.0
 python-dotenv>=1.0.0
 kagglehub>=0.1.0
 matplotlib>=3.8.0
+fastapi>=0.111.0
+uvicorn>=0.30.0
+python-multipart>=0.0.9
