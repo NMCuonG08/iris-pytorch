@@ -4,7 +4,7 @@ from pathlib import Path
 import torch
 
 from src.data import create_dataloaders
-from src.losses import CombinedDiceFocalLoss
+from src.losses import CombinedDiceFocalLoss, CombinedIrisLoss
 from src.models import SegFormerCustom
 from src.training import Trainer
 from src.utils import load_yaml_config, set_seed
@@ -43,12 +43,31 @@ def main() -> None:
     )
 
     loss_cfg = config["loss"]
-    criterion = CombinedDiceFocalLoss(
-        dice_weight=loss_cfg.get("dice_weight", 0.6),
-        focal_weight=loss_cfg.get("focal_weight", 0.4),
-        focal_alpha=loss_cfg.get("focal_alpha", 0.8),
-        focal_gamma=loss_cfg.get("focal_gamma", 2.0),
-    )
+    loss_type = loss_cfg.get("type", "combined_dice_focal")
+    if loss_type == "combined_iris":
+        criterion = CombinedIrisLoss(
+            dice_weight=loss_cfg.get("dice_weight", 0.5),
+            focal_weight=loss_cfg.get("focal_weight", 0.5),
+            boundary_iou_weight=loss_cfg.get("boundary_iou_weight", 0.25),
+            boundary_dice_weight=loss_cfg.get("boundary_dice_weight", 0.0),
+            contour_weight=loss_cfg.get("contour_weight", 0.0),
+            edge_weight=loss_cfg.get("edge_weight", 0.0),
+            focal_alpha=loss_cfg.get("focal_alpha", 0.8),
+            focal_gamma=loss_cfg.get("focal_gamma", 2.0),
+            boundary_dilation_size=loss_cfg.get("boundary_dilation_size", 3),
+        )
+    else:
+        criterion = CombinedDiceFocalLoss(
+            dice_weight=loss_cfg.get("dice_weight", 0.6),
+            focal_weight=loss_cfg.get("focal_weight", 0.4),
+            focal_alpha=loss_cfg.get("focal_alpha", 0.8),
+            focal_gamma=loss_cfg.get("focal_gamma", 2.0),
+            boundary_iou_weight=loss_cfg.get("boundary_iou_weight", 0.0),
+            boundary_dice_weight=loss_cfg.get("boundary_dice_weight", 0.0),
+            contour_weight=loss_cfg.get("contour_weight", 0.0),
+            edge_weight=loss_cfg.get("edge_weight", 0.0),
+            boundary_dilation_size=loss_cfg.get("boundary_dilation_size", 3),
+        )
 
     optimizer = torch.optim.AdamW(
         model.parameters(),
