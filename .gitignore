@@ -1,0 +1,69 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Python cache / build
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+dist/
+build/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Jupyter / IPython / Spyder
+.ipynb_checkpoints/
+.spyproject/
+
+# IDE / Editor
+.vscode/
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/tasks.json
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# ML artifacts
+runs/
+checkpoints/
+wandb/
+mlruns/
+tensorboard/
+
+# Local data and generated dataset outputs
+dataset/raw/
+dataset/images/
+dataset/masks/
+dataset/splits/
+dataset/README.md
+
+# Hugging Face / model cache
+.cache/
+huggingface/
+
+# Temporary files
+*.tmp
+*.temp
