@@ -1,0 +1,12 @@
+Batch prediction summary
+============================================================
+001 | C100_S1_I1 | mean_prob=0.0386 | fg_ratio=0.0335
+002 | C100_S1_I10 | mean_prob=0.1109 | fg_ratio=0.0999
+003 | C100_S1_I11 | mean_prob=0.1115 | fg_ratio=0.1009
+004 | C100_S1_I12 | mean_prob=0.1172 | fg_ratio=0.1071
+005 | C100_S1_I13 | mean_prob=0.1957 | fg_ratio=0.1782
+006 | C100_S1_I14 | mean_prob=0.1976 | fg_ratio=0.1786
+007 | C100_S1_I15 | mean_prob=0.1466 | fg_ratio=0.1313
+008 | C100_S1_I2 | mean_prob=0.0379 | fg_ratio=0.0339
+009 | C100_S1_I3 | mean_prob=0.0353 | fg_ratio=0.0319
+010 | C100_S1_I4 | mean_prob=0.0502 | fg_ratio=0.0452

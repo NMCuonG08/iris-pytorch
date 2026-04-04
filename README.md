@@ -235,6 +235,50 @@ python scripts/plot_training_curves.py `
 
 If `metrics.csv` is missing, the script falls back to `epoch_summary.txt`.
 
+#### 8.3 Generate Before/After Showcase Folders (for demo)
+Generate the same folders used for reporting and sharing results:
+
+```powershell
+python scripts/generate_showcase_results.py --config configs/train.yaml --checkpoint runs/iris-segformer/checkpoints/best.pt --test-dir test --num-batch 10 --device cuda
+```
+
+This command fills:
+- `inference_test_results/` (before/after masks, probability maps, boundaries)
+- `overlay_test_results/` (overlay images + before/after comparison)
+- `overlay_examples/` (multiple overlay styles + style grid + comprehensive comparison)
+- `batch_test_results/` (batch predictions + `batch_summary.txt`)
+
+If you don't have GPU, replace `--device cuda` with `--device cpu`.
+
+### Step 9: Run FastAPI Upload UI (Optional)
+After training, you can run an upload UI to send images and get predicted mask/overlay instantly.
+
+```powershell
+uvicorn app_fastapi:app --host 0.0.0.0 --port 8000
+```
+
+Open browser: `http://127.0.0.1:8000`
+
+### Step 10: Clean Showcase Results Between Experiments
+If you train many times and want to quickly reset all demo/result folders before a new run:
+
+```powershell
+python scripts/clean_showcase_results.py --yes
+```
+
+This clears content inside:
+- `augmentation_visualizations/`
+- `batch_test_results/`
+- `inference_test_results/`
+- `overlay_examples/`
+- `overlay_test_results/`
+
+To remove the folders themselves:
+
+```powershell
+python scripts/clean_showcase_results.py --yes --remove-dirs
+```
+
 ---
 
 ## 📁 Project Structure
@@ -243,6 +287,8 @@ If `metrics.csv` is missing, the script falls back to `epoch_summary.txt`.
 Eris/
 ├── requirements.txt              # Python dependencies
 ├── train.py                      # Training entrypoint script
+├── inference.py                  # Run model inference on test images and save overlays
+├── app_fastapi.py                # FastAPI upload UI for interactive inference
 ├── README.md                     # This documentation
 ├── .env                          # Kaggle credentials (create from .env.example)
 ├── .env.example                  # Template for .env
@@ -261,7 +307,10 @@ Eris/
 │   ├── download_dataset.py       # Generic dataset downloader (used by download_ubiris.py)
 │   ├── prepare_dataset.py        # Step 5: Organize & split dataset
 │   ├── visualize_prediction.py   # Step 8.1: Save image/GT/prediction comparison
-│   └── plot_training_curves.py   # Step 8.2: Save loss + mIoU plots
+│   ├── plot_training_curves.py   # Step 8.2: Save loss + mIoU plots
+│   ├── visualize_augmentations.py # Create augmentation visualization artifacts
+│   ├── evaluate_model.py         # Evaluate checkpoint and save metrics/failed cases
+│   └── generate_showcase_results.py # Build before/after demo folders for sharing
 │
 ├── src/
 │   ├── __init__.py
@@ -279,7 +328,16 @@ Eris/
 │   │
 │   ├── losses/                   # Loss functions
 │   │   ├── __init__.py
-│   │   └── dice_focal_loss.py   # Combined Dice (60%) + Focal (40%) Loss
+│   │   ├── dice.py              # Dice loss + tensor helpers
+│   │   ├── focal.py             # Focal loss
+│   │   ├── boundary.py          # Boundary-aware losses
+│   │   ├── combined.py          # Combined loss presets
+│   │   └── dice_focal_loss.py   # Backward-compatibility export layer
+│   │
+│   ├── evaluation/               # Evaluation utilities
+│   │   ├── __init__.py
+│   │   ├── metrics.py           # IoU/Dice/F1/boundary metrics + speed benchmark
+│   │   └── evaluator.py         # Model evaluation orchestrator
 │   │
 │   ├── training/                 # Training loop
 │   │   ├── __init__.py
@@ -293,7 +351,14 @@ Eris/
 │   │   ├── logger.py            # Logging setup
 │   │   ├── checkpoint.py        # Checkpoint saving/loading
 │   │   ├── visualization.py     # Prediction visualization helpers
+│   │   ├── visualize.py         # Dataset preview + overlay export helpers
 │   │   └── training_curves.py   # Metrics parsing + curve plotting helpers
+│
+├── augmentation_visualizations/   # Augmentation sample outputs for reporting
+├── batch_test_results/            # Batch prediction outputs + summary
+├── inference_test_results/        # Inference result artifacts (boundary/mask/prob)
+├── overlay_examples/              # Overlay style examples
+├── overlay_test_results/          # Overlay comparisons for before/after model
 │
 └── runs/                         # Output directory (auto-created in step 7)
     └── iris-segformer/           # Project output folder
